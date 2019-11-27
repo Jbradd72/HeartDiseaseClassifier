@@ -5,7 +5,7 @@ Created on Fri Oct  4 13:27:30 2019
 @author: JeffBradley
 """
 import numpy as np
-import random
+from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
@@ -54,8 +54,7 @@ best_rfc = RandomForestClassifier(n_estimators=1, max_depth=1,
                                       random_state=0)
 scores = []
 n = range(1,100)
-for i in n:
-    print(i)
+for i in tqdm(n):
     for j in range(2,3):
         rfc = RandomForestClassifier(n_estimators=i, max_depth=j,
                                       random_state=0)
@@ -81,10 +80,19 @@ xt = xTest.as_matrix()
 for i in range(len(final_pred)):
     pred = final_pred[i]
     if pred == 1:
-        print("you are going to die", ngb.predict_proba(xTest.to_numpy()[i].reshape(1,-1))[0][1])
+        prob = ngb.predict_proba(xTest.to_numpy()[i].reshape(1,-1))[0][1] * 100
+        if prob > 67:
+            print("YOU WERE SLAIN BY THANOS, FOR THE GOOD OF THE UNIVERSE", prob)
+        #else:
+            #print("You may be at risk for heart disease, you should consult with a healthcare professional")
         
     else:
-        print("Thanos has spared you", ngb.predict_proba(xTest.to_numpy()[i].reshape(1,-1))[0][0])
+        
+        prob = ngb.predict_proba(xTest.to_numpy()[i].reshape(1,-1))[0][0] * 100
+        if prob > 67:
+            print("Thanos has spared you", prob)
+        #else:
+            #print("You may be at risk for heart disease, you should consult with a healthcare professional")
 #print(confusion_matrix(yTest, predictions))
 #print(classification_report(yTest, predictions))
 
