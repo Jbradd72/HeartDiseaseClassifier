@@ -31,6 +31,7 @@ data = pd.read_csv('cardio_train.csv', sep=';')
 #PreProcessing
 y = data['cardio']
 x = data.drop('cardio', axis = 1)
+x = x.drop('id', axis = 1)
 colsToFit = ['ap_lo', 'ap_hi', 'height', 'weight']
 scaler = MinMaxScaler()
 
@@ -74,7 +75,7 @@ for i in tqdm(n):
 print(best_i, best_j, best_score)
 plt.plot(n, scores)
 
-#joblib.dump(best_rfc, "./best_forest")
+joblib.dump(best_rfc, "./best_forest")
 
 
 best_rfc = joblib.load("./best_forest")
