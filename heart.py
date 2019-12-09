@@ -15,7 +15,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
-from sklearn.externals import joblib
+import joblib
 
 def doRandomForest(iter):
     print(iter)
@@ -46,10 +46,10 @@ for i in x['age']:
         new_list.append(0)
     
 x['age'] = new_list;
-xTrain, xTest, yTrain, yTest = train_test_split(x, y, train_size = .98, shuffle=True)
+xTrain, xTest, yTrain, yTest = train_test_split(x, y, train_size = .9, shuffle=True)
 
 
-'''best_score = 0;
+best_score = 0;
 best_i = 0
 best_j = 1
 best_rfc = RandomForestClassifier(n_estimators=1, max_depth=1,
@@ -60,7 +60,7 @@ for i in tqdm(n):
     for j in range(2,3):
         rfc = RandomForestClassifier(n_estimators=i, max_depth=j,
                                       random_state=0)
-        rfc.fit(xTrain, yTrain)
+        rfc.fit(x, y)
         predictions = rfc.predict(xTest)
         score = accuracy_score(yTest, predictions)
         scores.append(score)
@@ -72,20 +72,19 @@ for i in tqdm(n):
 
 
 print(best_i, best_j, best_score)
+plt.plot(n, scores)
 
+#joblib.dump(best_rfc, "./best_forest")
 
-final_pred = best_rfc.predict(xTest)
-ngb = GaussianNB()
-ngb.fit(xTrain, yTrain)
-
-joblib.dump(best_rfc, "./best_forest")'''
 
 best_rfc = joblib.load("./best_forest")
-final_pred = best_rfc.predict(xTest)
-ngb = GaussianNB()
-ngb.fit(xTrain, yTrain)
+#final_pred = best_rfc.predict(xTest)
+#ngb = GaussianNB()
+#ngb.fit(xTrain, yTrain)
 
-for i in range(len(final_pred)):
+print(best_rfc.n_estimators, best_rfc.max_depth)
+
+'''for i in range(len(final_pred)):
     pred = final_pred[i]
     if pred == 1:
         prob = ngb.predict_proba(xTest.to_numpy()[i].reshape(1,-1))[0][1] * 100
@@ -98,7 +97,7 @@ for i in range(len(final_pred)):
         
         prob = ngb.predict_proba(xTest.to_numpy()[i].reshape(1,-1))[0][0] * 100
         if prob > 50:
-            print("Thanos has spared you", prob)
+            print("Thanos has spared you", prob)'''
         #else:
             #print("You may be at risk for heart disease, you should consult with a healthcare professional")
 #print(confusion_matrix(yTest, predictions))
